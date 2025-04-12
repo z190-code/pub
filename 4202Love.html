@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToOurLovers</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: black; /* 被背景图片覆盖 */  
+            background-image: url("https://www.baidu.com/link?url=hos7YTHAv8Bi4A7ZGZQRtZeUyVHqnGKfQHhoZh53IP5fBE4QXQkE3i9kDf6H0TqNcFNf-dlRGR4hHp6LZY4AI6rfS8a2BRcchwSvsvtIxKNAVhp7JzQo02X4DY44kmbeLDced39F4A_zJ5fmBoUa_cTkInJyj1KHj4ee961UWZCtix6M5EWxgecvCGEboahdDi2sUG9FLhx71ZNxsMOIALJ51EMbDAIOryfEFOUIj61qxmLDTt8m9bx2obiIe2ltmqTFiCL3hwkx6UxG83P3prGYrywhMLFL5kMnA9ksRcvNnBJCkTN3TLdZeWpCM0kWG1Zb8OUihelIAWtRm1KwXG7FVaROpu9LV0eyozBMm4OsCwfeFk9tqZoYAHNuHw2x-8hKfO7Fc9mPT3KmmQMjhORqir7u4n-bVwWZx_fu9wdUVksNqa5Aphb766zrjyLPL7ac_TtIFqr_DVkAE2lNVgKZMqbHKIOtO1BBiT2_lYNBV7wlrmjyup7vkELLPL0ftB36OcO76FXlDTzVreqt45tQvrKyc1TQgxJxPVtg34VHjQUP8vNRqTIZV0kJhp3dEAHKJaNQqN86_JO3IOt-Wt2s_8pB86H7nBO7T1HUnAoPso75khzcUt_2w0wlZ_kXrcITumnUhV5-4FDgbEnm-pvA95xFmXWiHQ82c0ks5iY3pMyvKcK0IB_1In9oSxZI&wd=&eqid=931f6bfc003a19d200000006671a2869"); /* 添加背景图 */  
+            background-size: cover; /* 背景图整个屏幕 */  
+            /* background-position: center; 背景图居中显示   */
+            /* background-repeat: no-repeat; 背景图不重复  */
+        }
+        canvas {
+            display: block;
+        }
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const words = [
+        "我爱你", "I Love You!", "永远爱你", "你是我年少的欢喜",
+        "一生一世一双人", "余生我陪你走", "陪你到来生", "春风十里不如你",
+        "三生有幸来日方长", "夜很长幸有你", "爱你的全部", "踏过八荒四海只为你",
+        "愿得一人心", "众里寻他千百度", "顶峰相见", "等你下课",
+        "往后余生", "Missing You!", "做我女朋友好么",
+        "你已经在我的未来里了", "陪你到世界之巅", "白头偕老",
+        "我喜欢你", "好想好想你", "想你想你想你",
+        "今夜月色真美", "你是我的唯一"
+    ];
+
+    class Love {
+        constructor() {
+            this.x = -200;  // 从左侧画布外开始
+            this.y = Math.random() * canvas.height;
+            this.speed = Math.random() * 3 + 2;
+            this.word = words[Math.floor(Math.random() * words.length)];
+            this.color = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`;
+        }
+        draw() {
+            ctx.fillStyle = this.color;
+            ctx.font = '24px Comic Sans MS';
+            ctx.textAlign = 'center';
+            ctx.fillText(this.word, this.x, this.y);
+        }
+        move() {
+            this.x += this.speed;  // 文字水平向右移动
+            if (this.x > canvas.width + 200) {  // 文字移出画布右侧后重置
+                this.x = -200;
+                this.y = Math.random() * canvas.height;
+                this.word = words[Math.floor(Math.random() * words.length)];
+                this.color = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`;
+            }
+        }
+    }
+ 
+    class Ball {
+        constructor() {
+            this.r = Math.random() * 3 + 2;
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.speed = Math.random() * 8 + 2;
+            this.color = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`;
+        }
+        draw() {
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        move() {
+            this.y += this.speed;
+            if (this.y > canvas.height + this.r) {
+                this.y = -this.r;
+                this.x = Math.random() * canvas.width;
+                this.color = `rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`;
+            }
+        }
+    }
+
+    const loves = [];
+    for (let i = 0; i < 66; i++) {
+        loves.push(new Love());
+        loves.push(new Ball());
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        loves.forEach(obj => {
+            obj.move();
+            obj.draw();
+        });
+        requestAnimationFrame(animate);
+    }
+    animate();
+</script>
+</body>
+</html>
